@@ -177,7 +177,7 @@ export default function MainLayout() {
         <div className="px-4 py-4">
           <Link to="/">
             <h1 className='text-white text-xl p-0 m-0 text-start'>SMQ PRO</h1>
-            <span className='text-white'> Intercocina {appVersion && <span className="text-gray-400 font-normal text-xs ml-1">v{appVersion}</span>}</span>
+            <span className='text-white'> SERIEMOBLE {appVersion && <span className="text-gray-400 font-normal text-xs ml-1">v{appVersion}</span>}</span>
           </Link>
         </div>
         <Menu

@@ -7,7 +7,7 @@ const {Title} = Typography;
 const DRAG_STYLE = { WebkitAppRegion: 'drag' };
 const NO_DRAG_STYLE = { WebkitAppRegion: 'no-drag' };
 
-const TitleBar = ({ title = 'Intercocina' }) => {
+const TitleBar = ({ title = 'SERIEMOBLE' }) => {
   const [isMaximized, setIsMaximized] = useState(false);
   const hasElectron = typeof window !== 'undefined' && !!window.electron;
 

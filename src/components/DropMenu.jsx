@@ -42,7 +42,7 @@ const DropMenu = ({ appVersion }) => {
         const menuItems = [
             {
                 key: 'user',
-                label: user?.full_name ?? 'INTERCOCINA',
+                label: user?.full_name ?? 'SERIEMOBLE',
                 disabled: true,
             },
         ];
