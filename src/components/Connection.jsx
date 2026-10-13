@@ -10,11 +10,11 @@ export default function Connection() {
     const connections = [
         {
             label: 'Local',
-            value: 'http://192.168.1.38:30/api/',
+            value: 'http://192.168.1.38:40/api/',
         },
         {
             label: 'Online',
-            value: 'https://smq.intercocina.online/api/',
+            value: 'https://smq-seri.intercocina.online/api/',
         },
         {
             label: 'Développement',

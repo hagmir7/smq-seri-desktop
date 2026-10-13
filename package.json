@@ -1,12 +1,12 @@
 {
-  "name": "smq-pro",
+  "name": "SMQ-PRO-SERIEMOBLE",
   "private": true,
   "version": "1.1.2",
-  "description": "SMQ Pro - SYSTEME DE MANAGEMENT DE LA QUALITE",
+  "description": "SMQ PRO SERIEMOBLE - SYSTEME DE MANAGEMENT DE LA QUALITE",
   "author": "Intercocina",
   "main": "electron/main.js",
   "scripts": {
-    "dev": "concurrently -k -n VITE,ELECTRON -c blue,green \"npm:dev:vite\" \"npm:dev:electron\"",
+    "dev": "concurrently -k -n VITE,ELECTRON -c blue,green 'npm:dev:vite' 'npm:dev:electron'",
     "dev:vite": "vite",
     "dev:electron": "wait-on tcp:5173 && cross-env NODE_ENV=development electron .",
     "build": "vite build",
@@ -44,8 +44,8 @@
     "wait-on": "^8.0.1"
   },
   "build": {
-    "appId": "com.intercocina.smq",
-    "productName": "SMQ",
+    "appId": "com.intercocina.smq-seri",
+    "productName": "SMQ SERIEMOBLE",
     "files": [
       "dist/**/*",
       "electron/**/*",
@@ -58,14 +58,14 @@
     "publish": [
       {
         "provider": "github",
-        "repo": "smq-desktop",
+        "repo": "smq-seri-desktop",
         "owner": "hagmir7"
-        
       }
     ],
     "win": {
       "icon": "build/icon.png",
-      "executableName": "SMQ",
+      "executableName": "SMQ SERIEMOBLE",
+      "requestedExecutionLevel": "asInvoker",
       "target": [
         {
           "target": "nsis",
@@ -77,7 +77,11 @@
     },
     "nsis": {
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "allowElevation": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
     },
     "mac": {
       "target": "dmg",

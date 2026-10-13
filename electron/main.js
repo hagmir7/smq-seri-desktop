@@ -17,7 +17,7 @@ const NOTIFICATION_INTERVAL_MS = 30 * 1000;
 const UPDATE_CHECK_INTERVAL_MS = 4 * 60 * 60 * 1000;
 
 // Must match the appId used to build/package the app (electron-builder config).
-const APP_ID = "com.intercocina.smq";
+const APP_ID = "com.intercocina.smq-seri";
 const APP_NAME = "SMQ-PRO";
 
 // Path to a tray icon. Use a small (16x16 / 32x32) png, ideally with an

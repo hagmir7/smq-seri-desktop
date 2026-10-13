@@ -26,7 +26,7 @@ import TitleBar from '../components/TitleBar';
 const { Title, Text } = Typography;
 
 // Default connection
-const DEFAULT_CONNECTION = 'http://192.168.1.38:30/api/';
+const DEFAULT_CONNECTION = 'http://192.168.1.38:60/api/';
 
 const Login = () => {
     const [form] = Form.useForm();
