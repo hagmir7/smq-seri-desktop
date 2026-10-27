@@ -1,11 +1,36 @@
-import React, { useEffect } from 'react';
-import { Modal, Form, Input, Radio, Select, message, DatePicker } from 'antd';
+import React, { useEffect, useState } from 'react';
+import {
+  Modal,
+  Form,
+  Input,
+  Radio,
+  Select,
+  message,
+  DatePicker,
+  Upload,
+  Button,
+} from 'antd';
+import { UploadOutlined, PaperClipOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import reclamationApi from '../utils/reclamationApi';
 
 const { TextArea } = Input;
 
 const PRIORITIES = ['Normale', 'Critique', 'Urgente'];
+
+const ACCEPTED_EXTENSIONS = '.jpg,.jpeg,.png,.webp,.pdf,.doc,.docx';
+const ACCEPTED_MIME_TYPES = [
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+  'application/pdf',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+];
+const MAX_FILE_SIZE_MB = 10;
+
+// Normalizes the Upload event into the fileList array for the Form
+const normFile = (e) => (Array.isArray(e) ? e : e?.fileList);
 
 export default function ReclamationStep3Modal({
   reclamationId,
@@ -14,7 +39,8 @@ export default function ReclamationStep3Modal({
   onUpdated,
 }) {
   const [form] = Form.useForm();
-  const [submitting, setSubmitting] = React.useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [existingFile, setExistingFile] = useState(null); // { name, url }
 
   // Watch the selected value
   const isJustifiee = Form.useWatch('is_justifiee', form);
@@ -26,6 +52,7 @@ export default function ReclamationStep3Modal({
     if (!open || !reclamationId) return;
 
     form.resetFields();
+    setExistingFile(null);
     fetchReclamation();
   }, [open, reclamationId]);
 
@@ -42,6 +69,13 @@ export default function ReclamationStep3Modal({
           ? Number(data.is_justifiee)
           : undefined,
     });
+
+    if (data?.justification_file_url) {
+      setExistingFile({
+        name: data.justification_file.split('/').pop(),
+        url: data.justification_file_url,
+      });
+    }
   };
 
   const fetchReclamation = async () => {
@@ -58,21 +92,51 @@ export default function ReclamationStep3Modal({
     }
   };
 
+  const beforeUpload = (file) => {
+    if (!ACCEPTED_MIME_TYPES.includes(file.type)) {
+      message.error('Format non supporté (images, PDF ou Word uniquement).');
+      return Upload.LIST_IGNORE;
+    }
+
+    if (file.size / 1024 / 1024 > MAX_FILE_SIZE_MB) {
+      message.error(`Le fichier ne doit pas dépasser ${MAX_FILE_SIZE_MB} Mo.`);
+      return Upload.LIST_IGNORE;
+    }
+
+    return false; // prevent auto-upload, the file is sent with the form
+  };
+
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
 
       setSubmitting(true);
 
-      await reclamationApi.updateStep3(reclamationId, {
-        processing_analysis: values.processing_analysis,
-        is_justifiee: values.is_justifiee,
-        cause_analysis: values.cause_analysis,
-        priority: values.priority,
-        planned_closing_date: values.planned_closing_date
-          ? values.planned_closing_date.format('YYYY-MM-DD')
-          : null,
-      });
+      const formData = new FormData();
+      formData.append('processing_analysis', values.processing_analysis);
+      formData.append('is_justifiee', values.is_justifiee); // 1 or 0
+
+      // Only append optional fields when they have a value
+      // (FormData would turn null/undefined into "null"/"undefined" strings)
+      if (values.cause_analysis) {
+        formData.append('cause_analysis', values.cause_analysis);
+      }
+      if (values.priority) {
+        formData.append('priority', values.priority);
+      }
+      if (values.planned_closing_date) {
+        formData.append(
+          'planned_closing_date',
+          values.planned_closing_date.format('YYYY-MM-DD')
+        );
+      }
+
+      const file = values.justification_file?.[0]?.originFileObj;
+      if (file) {
+        formData.append('justification_file', file);
+      }
+
+      await reclamationApi.updateStep3(reclamationId, formData);
 
       message.success("L'analyse a été enregistrée avec succès.");
 
@@ -179,6 +243,34 @@ export default function ReclamationStep3Modal({
             />
           </Form.Item>
         </div>
+
+        <Form.Item
+          label="Pièce justificative"
+          name="justification_file"
+          valuePropName="fileList"
+          getValueFromEvent={normFile}
+          extra={`Images, PDF ou Word — max ${MAX_FILE_SIZE_MB} Mo`}
+        >
+          <Upload
+            accept={ACCEPTED_EXTENSIONS}
+            beforeUpload={beforeUpload}
+            maxCount={1}
+          >
+            <Button icon={<UploadOutlined />}>Choisir un fichier</Button>
+          </Upload>
+        </Form.Item>
+
+        {existingFile && (
+          <div className="mb-4 text-sm">
+            <PaperClipOutlined />{' '}
+            <a href={existingFile.url} target="_blank" rel="noreferrer">
+              {existingFile.name}
+            </a>{' '}
+            <span className="text-gray-500">
+              (fichier actuel, remplacé si vous en choisissez un nouveau)
+            </span>
+          </div>
+        )}
       </Form>
     </Modal>
   );

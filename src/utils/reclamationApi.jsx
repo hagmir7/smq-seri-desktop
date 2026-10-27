@@ -28,8 +28,8 @@ export const reclamationApi = {
   // 2. POST /api/reclamations/{id}/step-2
   updateStep2: (id, payload) => api.post(`reclamations/${id}/step-2`, payload),
 
-  // 3. POST /api/reclamations/{id}/step-3
-  updateStep3: (id, payload) => api.post(`reclamations/${id}/step-3`, payload),
+  // 3. POST /api/reclamations/{id}/step-3 (multipart, supports justification_file)
+  updateStep3: (id, payload) => api.post(`reclamations/${id}/step-3`, payload, { headers: formHeaders }),
 
   // 7. DELETE /api/reclamations/{id}
   remove: (id) => api.delete(`reclamations/${id}`),
