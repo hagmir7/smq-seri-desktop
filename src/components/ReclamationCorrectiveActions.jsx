@@ -948,11 +948,8 @@ export default function ReclamationCorrectiveActions({ reclamationId }) {
                 optionFilterProp="label"
               />
             </Form.Item>
-
-
-
           </div>
-          {isNewSubAction ? (
+          {true ? (
             <Form.Item
               label="RSP de traitment"
               required

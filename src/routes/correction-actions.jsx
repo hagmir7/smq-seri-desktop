@@ -438,6 +438,9 @@ export default function CorrectiveActions() {
             render: (responsable, record) => {
                 const isPerson = !!record?.person;
 
+                // console.log(record);
+                // console.log(responsable)
+
                 const name =
                     record?.person?.full_name ||
                     responsable?.full_name ||
@@ -630,17 +633,17 @@ export default function CorrectiveActions() {
             >
                 {selected && (
                    <DrawerBody
-    item={selected}
-    parent={parentOf(selected)}
-    childActions={childrenOf(selected.id)}   // renamed
-    activeTab={drawerTab}
-    setActiveTab={setDrawerTab}
-    onOpenRelated={(id) => openDrawer(id, "view")}
-    onUpdate={(payload) => handleUpdate(selected.id, payload)}
-    onComplete={(payload) => handleComplete(selected.id, payload)}
-    onCreateChild={(payload) => handleCreateChild(selected.id, payload)}
-    loading={loading}
-/>
+                        item={selected}
+                        parent={parentOf(selected)}
+                        childActions={childrenOf(selected.id)}
+                        activeTab={drawerTab}
+                        setActiveTab={setDrawerTab}
+                        onOpenRelated={(id) => openDrawer(id, "view")}
+                        onUpdate={(payload) => handleUpdate(selected.id, payload)}
+                        onComplete={(payload) => handleComplete(selected.id, payload)}
+                        onCreateChild={(payload) => handleCreateChild(selected.id, payload)}
+                        loading={loading}
+                    />
                 )}
             </Drawer>
 
